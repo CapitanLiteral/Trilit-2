@@ -245,6 +245,7 @@ void registre(void)
         }
  */
         printf("hola git\n");
+        printf("hola git 2");
     // Copiar fitxer a array de structs
 
         fusuaris = fopen("data\\usuaris.bin", "rb");
