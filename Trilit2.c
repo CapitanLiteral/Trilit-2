@@ -26,6 +26,7 @@
 
     typedef struct
     {
+        int  id;
         char nik[25];
         char pass[16]; 
     }usuari;
@@ -210,24 +211,29 @@ void registre(void)
         {
             printf("3\n");
             fread(&auser[i], sizeof(usuari), 1, fusuaris);
+            auser[i].id = i;
             i++;
         }while (feof(fusuaris) == 0);      
         fclose(fusuaris);
+        auser[i+1].id = -1;
 
-        for (i = 0; i < 20; ++i)
+        i = 0;
+        while(auser[i].id != -1)
         {
             printf("nik: %s\n", auser[i].nik);
             printf("pass: %s\n", auser[i].pass);
+            i++;
         }
-    // Comprovar si aquest nom d'usuari ja hi es.
-        for (i = 0; i < 100; ++i)
+    // Comprovar si aquest nom d'usuari ja hi es dins el Array de Structs.
+        i = 0;
+        while(auser[i].id != -1 && pillat == 0)
         {
             if(strcmp(ruser.nik, auser[i].nik) == 0)
             {
                 printf("Aquest nom d'usuari ja ha estat escollit.\n");
-                i=100;
                 pillat = 1;
             }            
+            i++;
         }
         if (pillat == 0)
         {
@@ -236,16 +242,6 @@ void registre(void)
             fwrite(&ruser, sizeof(usuari), 1, fusuaris);
             fclose(fusuaris);        
         }
-
-   /* // Buscar lloc buit per a registrar nou usuari.
-        while(ruser[i].nik[1] != '\0')
-        {
-            pos = i;
-            i++;
-        }
- */
-        printf("hola git\n");
-        printf("hola git 2");
     // Copiar fitxer a array de structs
 
         fusuaris = fopen("data\\usuaris.bin", "rb");
@@ -256,11 +252,12 @@ void registre(void)
             i++;
         }while (feof(fusuaris) == 0);      
         fclose(fusuaris);
-
-        for (i = 0; i < 20; ++i)
+        i = 0;
+        while(auser[i].id != -1)
         {
             printf("2nik: %s\n", auser[i].nik);
             printf("2pass: %s\n", auser[i].pass);
+            i++;
         }
 }
 
