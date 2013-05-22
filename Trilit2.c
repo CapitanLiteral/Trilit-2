@@ -66,14 +66,15 @@
         fclose(fpreguntes);
         // Imprimir preguntes PROVA
         i = 0;
-        while(pregunta[i].id != -1)
+        /*while(pregunta[i].id != -1)
         {
             printf("id: %s\n", pregunta[i].id);
             printf("Enunciat: %s\n", pregunta[i].enunciat);
             i++;
-        }
+        }*/
     } 
     pregunta[i+1].id = -1;   
+    alta(&pregunta[0]);
 // Menu Inicial
 
     merl();
@@ -401,7 +402,7 @@ void alta(preguntes *inipreg)
             {
                   (*pregunta).dificultat = 3;
                   
-            }
+            }        
 }
 // Baixa preguntes --------------------------- (Opcional)
 
