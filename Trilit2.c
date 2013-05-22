@@ -19,7 +19,7 @@
         char enunciat[100];
         char solucions[6][100]; //[Files][Cols] Son mes de 3 perque potser implemento que les incorrectes no sempre siguin iguals 
         char correcta[100];
-        int tematica; // 1 --> // 2 --> // 3 --> //
+        int tematica; // 1 --> Ciencia // 2 --> Humanistic // 3 --> Cultura general //
         int dificultat; // de 1 a 3
 
     }preguntes;
@@ -33,13 +33,49 @@
 
 //Funcions
     void menu (void);
-    void login (void);
+    int login (void);
     void merl(void);
     void registre(void);
+    void sobre(void);
+    void alta(preguntes *);
 
 // Body
  int main (void)
- {
+     {
+    // Crear Structs
+        preguntes pregunta[100];
+        FILE * fpreguntes;
+    // Variables
+        int i;
+        i = -1;
+// Copiar preguntes a struct
+    fpreguntes = fopen("data\\pregun.bin", "rb");
+    if(fpreguntes == NULL)
+    {
+        fpreguntes = fopen("data\\pregun.bin", "wb+");
+    }
+    else
+    {
+        i = 0;
+        do
+        {
+            fread(&pregunta[i], sizeof(preguntes), 1, fpreguntes);
+            pregunta[i].id = i;
+            i++;
+        }while (feof(fpreguntes) == 0);      
+        fclose(fpreguntes);
+        // Imprimir preguntes PROVA
+        i = 0;
+        while(pregunta[i].id != -1)
+        {
+            printf("id: %s\n", pregunta[i].id);
+            printf("Enunciat: %s\n", pregunta[i].enunciat);
+            i++;
+        }
+    } 
+    pregunta[i+1].id = -1;   
+// Menu Inicial
+
     merl();
 
  }
@@ -54,7 +90,7 @@ void merl(void)
         int opcio; // controla el menú
     //inicialitzacio variables menú
         opcio = -1;
-    while (opcio != 4)/*el numero depen del nombre d'opcions*/
+    while (opcio != 4)   //El numero es igual al numero d'opcions
     {    
         printf("\tTRILI 2\n");
         printf("\n1.- Login\n");
@@ -78,13 +114,13 @@ void merl(void)
         }      
         else if(opcio==3)
         {
-              
+              sobre();
               
         }
     }
 
 }
-// Menu --------------------------------------------------------------------------- S'ha de retocar
+// Menu --------------------------------------------------------------------------- PLANTILLA
 void menu(void)
 {
 
@@ -100,7 +136,9 @@ void menu(void)
         printf("3.- Exemple de tercera opcio.\n");
         printf("4.- Exemple de quarta opcio.\n");
         printf("5.- EXIT.\n");
+        fflush(stdin);
         scanf("%d", &opcio);
+        fflush(stdin);
         while(opcio < 0 || opcio > 5)
         {
             printf("Ha introduit una opcio incorrecta, torni a introduir una opcio.\n");
@@ -130,15 +168,16 @@ void menu(void)
         
 }
 // Login
-void login(void)
+int login(void)
 {
-    char usuari[25];
+    char nik[25];
     char contrasenya[16];
     char caracter;
+    usuari usuaris[200];
 
     printf("\n\t Login\n\n\n");
-    printf("Usuari: ");
-    gets(usuari);
+    printf("Nikname: ");
+    gets(nik);
     printf("\nContrasenya: ");
     do
     {
@@ -149,7 +188,14 @@ void login(void)
         }        
         //printf("%d", caracter);
     } while (caracter != 13 );
-
+    if (nik == "admin" && contrasenya == "admin")
+    {
+        return(1);
+    }
+    else
+    {
+        return(0);
+    }
     printf("\nlogin complet!\n");
     
      
@@ -260,6 +306,108 @@ void registre(void)
             i++;
         }
 }
+
+// Sobre el Joc PER ACABAR
+void sobre(void)
+{
+    printf("El joc esta sent construit. PACIENCIA!\n");
+    printf(".\n");
+    printf(".\n");
+    printf(".\n");
+}
+
+// Alta preguntes
+void alta(preguntes *inipreg)
+{
+    preguntes *pregunta;
+    pregunta = inipreg;
+    int i, opcio;
+    opcio = -1;
+    // Trobar pregunta final +1
+    while ((*pregunta).id != -1)
+    {
+        pregunta++;
+    }
+    if ((*(pregunta+1)).id == -1)
+    {
+        pregunta++;
+    }
+
+    // Introduir dades pregunta
+        // Enunciat
+            printf("Introdueixi l'enunciat:");
+            gets((*pregunta).enunciat);
+        // Solucions Falses
+            i = 0;
+            do
+            {
+                printf("\nIntrodueixi la resposta falsa nº%d\n", i+1);
+                gets((*pregunta).solucions[i]);
+                i++;
+            }while(i < 6);
+        // Solucio Correcta
+            printf("\nIntrodueixi la resposta correcta\n");
+            gets((*pregunta).correcta);
+        // Tematica
+            printf("\nIntrodueixi una tematica:\n");
+            printf("\n1.- Ciencia\n");
+            printf("2.- Humanistic\n");
+            printf("3.- Cultura General\n");
+            fflush(stdin);
+            scanf("%d", &opcio);
+            fflush(stdin);
+            while(opcio < 0 || opcio > 3)
+            {
+                printf("Ha introduit una opcio incorrecta, torni a introduir una opcio.\n");
+                scanf("%d", &opcio);
+            }
+            if(opcio==1)
+            {
+                  (*pregunta).tematica = 1;  
+                         
+            }
+            else if(opcio==2)
+            {
+                  (*pregunta).tematica = 2;
+            }      
+            else if(opcio==3)
+            {
+                  (*pregunta).tematica = 3;
+                  
+            }
+        // Dificultat
+            printf("\nIntrodueixi una dificultat:\n");
+            printf("\n1.- Facil\n");
+            printf("2.- Mitg\n");
+            printf("3.- Dificil\n");
+            fflush(stdin);
+            scanf("%d", &opcio);
+            fflush(stdin);
+            while(opcio < 0 || opcio > 3)
+            {
+                printf("Ha introduit una opcio incorrecta, torni a introduir una opcio.\n");
+                scanf("%d", &opcio);
+            }
+            if(opcio==1)
+            {
+                    (*pregunta).dificultat = 1;
+                         
+            }
+            else if(opcio==2)
+            {
+                  (*pregunta).dificultat = 2;
+            }      
+            else if(opcio==3)
+            {
+                  (*pregunta).dificultat = 3;
+                  
+            }
+}
+// Baixa preguntes --------------------------- (Opcional)
+
+// Modificar preguntes ----------------------- (Opcional)
+
+// Mostra preguntes
 
 
 
