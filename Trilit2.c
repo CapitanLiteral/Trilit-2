@@ -23,7 +23,7 @@
         int dificultat; // de 1 a 3
 
     }preguntes;
-
+// Struct de usuaris
     typedef struct
     {
         int  id;
@@ -38,8 +38,9 @@
     void registre(void);
     void sobre(void);
     void alta(preguntes *);
+    void menuAdmin(void);
 
-// Body
+// MAIN ************************************************************************* MAIN
  int main (void)
      {
     // Crear Structs
@@ -57,28 +58,36 @@
     else
     {
         i = 0;
-        do
+        while (feof(fpreguntes) == 0)
         {
             fread(&pregunta[i], sizeof(preguntes), 1, fpreguntes);
             pregunta[i].id = i;
             i++;
-        }while (feof(fpreguntes) == 0);      
+        }      
         fclose(fpreguntes);
         // Imprimir preguntes PROVA
         i = 0;
-        /*while(pregunta[i].id != -1)
-        {
-            printf("id: %s\n", pregunta[i].id);
-            printf("Enunciat: %s\n", pregunta[i].enunciat);
-            i++;
-        }*/
     } 
-    pregunta[i+1].id = -1;   
-    alta(&pregunta[0]);
+    pregunta[i+1].id = -1;  
+    
+    i=0;
+    while (i < 5)
+    {
+        alta(&pregunta[0]);     
+    } 
+    
 // Menu Inicial
 
     merl();
-
+// Pegar alta preguntes al Fitxer
+    fpreguntes = fopen("data\\pregun.bin", "wb");
+    i = 0;
+    while (pregunta[i].id != -1)
+    {
+        fwrite(&pregunta[i], sizeof(preguntes), 1, fpreguntes);
+        i++;
+    }     
+    fclose(fpreguntes);
  }
 
 //*************************************************
@@ -89,8 +98,10 @@ void merl(void)
 {
     //Declaració variables menú
         int opcio; // controla el menú
+        int privilegis; // 1 --> admin || 0 --> user
     //inicialitzacio variables menú
         opcio = -1;
+
     while (opcio != 4)   //El numero es igual al numero d'opcions
     {    
         printf("\tTRILI 2\n");
@@ -106,7 +117,15 @@ void merl(void)
         }
         if(opcio==1)
         {
-              login();  
+           privilegis = login();
+           if (privilegis == 1)
+           {
+               
+           }
+           else if (privilegis == 0)
+           {
+               
+           }
                      
         }
         else if(opcio==2)
@@ -148,6 +167,53 @@ void menu(void)
         if(opcio==1)
         {
                 
+                     
+        }
+        else if(opcio==2)
+        {
+              
+        }      
+        else if(opcio==3)
+        {
+              
+              
+        }
+        else if(opcio==4)
+        {
+              
+              
+        } 
+          
+    }   
+        
+}
+// Menu ADMIN --------------------------------------------------------------------- Menu ADMIN
+void menuAdmin(void)
+{
+
+    //Declaració variables menú
+        int opcio; // controla el menú
+    //inicialitzacio variables menú
+        opcio = -1;
+ 
+    while (opcio != 5)/*el numero depen del nombre d'opcions*/
+    {
+        printf("\n1.- Alta de preguntes\n");
+        printf("2.- Exemple de segona opcio.\n");
+        printf("3.- Exemple de tercera opcio.\n");
+        printf("4.- Exemple de quarta opcio.\n");
+        printf("5.- EXIT.\n");
+        fflush(stdin);
+        scanf("%d", &opcio);
+        fflush(stdin);
+        while(opcio < 0 || opcio > 5)
+        {
+            printf("Ha introduit una opcio incorrecta, torni a introduir una opcio.\n");
+            scanf("%d", &opcio);
+        }
+        if(opcio==1)
+        {
+              alta();  
                      
         }
         else if(opcio==2)
@@ -322,12 +388,14 @@ void alta(preguntes *inipreg)
 {
     preguntes *pregunta;
     pregunta = inipreg;
-    int i, opcio;
+    int i, opcio, v_id;
     opcio = -1;
+    v_id = 0;
     // Trobar pregunta final +1
     while ((*pregunta).id != -1)
     {
         pregunta++;
+        v_id++;
     }
     if ((*(pregunta+1)).id == -1)
     {
@@ -402,13 +470,13 @@ void alta(preguntes *inipreg)
             {
                   (*pregunta).dificultat = 3;
                   
-            }        
+            }
+            (*pregunta).id = v_id+1;
+            (*(pregunta+1)).id = -1;       
 }
 // Baixa preguntes --------------------------- (Opcional)
 
 // Modificar preguntes ----------------------- (Opcional)
 
 // Mostra preguntes
-
-
 
