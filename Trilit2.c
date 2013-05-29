@@ -34,20 +34,25 @@
 //Funcions
     void menu (void);
     int login (void);
-    void merl(void);
+    int merl(void);
     void registre(void);
     void sobre(void);
     void alta(preguntes *);
-    void menuAdmin(void);
+    int menuAdmin(void);
+    int menuUser(void);
+    void jugar(void);
+    void continuarPartida(void);
+    void consultarPreguntes(void);
+    void entreno(void);
 
 // MAIN ************************************************************************* MAIN
  int main (void)
-     {
+{
     // Crear Structs
         preguntes pregunta[100];
         FILE * fpreguntes;
     // Variables
-        int i;
+        int i, cmerl, clogin, cMenuAdmin, cMenuUser;
         i = -1;
 // Copiar preguntes a struct
     fpreguntes = fopen("data\\pregun.bin", "rb");
@@ -70,15 +75,73 @@
     } 
     pregunta[i+1].id = -1;  
     
-    i=0;
+    /*i=0;
     while (i < 5)
     {
         alta(&pregunta[0]);     
-    } 
+    } */
     
 // Menu Inicial
+do
+{
 
-    merl();
+    cmerl = merl();
+    // Login
+    if (cmerl == 1)
+    {
+        clogin = login();
+        // Administrador
+        if (clogin == 1)
+        {
+            do
+            {
+                cMenuAdmin = menuAdmin();
+                // 
+                if (cMenuAdmin == 1)
+                {
+                    alta(&pregunta[0]);
+                }
+                else if (cMenuAdmin == 2)
+                {
+                    //continuarPartida();
+                }
+                else if (cMenuAdmin == 3)
+                {
+                    //jugar();
+                }
+                else if (cMenuAdmin == 4)
+                {
+                    //consultarPreguntes();
+                }
+                else if (cMenuAdmin == 5)
+                {
+                    //entreno();
+                }
+            } while (cMenuAdmin != 6);
+        }
+        // usuari
+        else if (clogin == 0)
+        {
+            do
+            {
+                cMenuUser = menuUser();
+            } while (cMenuUser =! 5);
+            printf("usuari\n");
+        }
+    }
+    // Registre
+    else if (cmerl == 2)
+    {
+        registre();
+    }
+    // Sobre
+    else if (cmerl == 3)
+    {
+        sobre();
+    }    
+
+} while (cmerl != 1);
+    
 // Pegar alta preguntes al Fitxer
     fpreguntes = fopen("data\\pregun.bin", "wb");
     i = 0;
@@ -88,22 +151,21 @@
         i++;
     }     
     fclose(fpreguntes);
- }
+
+}
 
 //*************************************************
 //**                  Funcions                   **
 //*************************************************
 // Menu Login/Registre
-void merl(void)
+int merl(void)
 {
     //Declaració variables menú
         int opcio; // controla el menú
         int privilegis; // 1 --> admin || 0 --> user
     //inicialitzacio variables menú
         opcio = -1;
-
-    while (opcio != 4)   //El numero es igual al numero d'opcions
-    {    
+   
         printf("\tTRILI 2\n");
         printf("\n1.- Login\n");
         printf("2.- Registrarse\n");
@@ -115,30 +177,23 @@ void merl(void)
             printf("Ha introduit una opcio incorrecta, torni a introduir una opcio.\n");
             scanf("%d", &opcio);
         }
-        if(opcio==1)
+        if(opcio == 1)
         {
-           privilegis = login();
-           if (privilegis == 1)
-           {
-               
-           }
-           else if (privilegis == 0)
-           {
-               
-           }
-                     
+            return(1);         
         }
-        else if(opcio==2)
+        else if(opcio == 2)
         {
-              registre();
+            
+            return(2);
         }      
-        else if(opcio==3)
+        else if(opcio == 3)
         {
-              sobre();
-              
+            return(3);
         }
-    }
-
+        else if(opcio == 4)
+        {
+            return(-1);
+        }
 }
 // Menu --------------------------------------------------------------------------- PLANTILLA
 void menu(void)
@@ -188,20 +243,66 @@ void menu(void)
         
 }
 // Menu ADMIN --------------------------------------------------------------------- Menu ADMIN
-void menuAdmin(void)
+int menuAdmin(void)
 {
 
     //Declaració variables menú
         int opcio; // controla el menú
     //inicialitzacio variables menú
         opcio = -1;
- 
-    while (opcio != 5)/*el numero depen del nombre d'opcions*/
-    {
+        printf("\t\tAdministrador\n");
         printf("\n1.- Alta de preguntes\n");
-        printf("2.- Exemple de segona opcio.\n");
-        printf("3.- Exemple de tercera opcio.\n");
-        printf("4.- Exemple de quarta opcio.\n");
+        printf("2.- Continuar partida\n");
+        printf("3.- Partida nova\n");
+        printf("4.- Consultar preguntes\n");
+        printf("5.- Entrenament\n");
+        printf("6.- EXIT.\n");
+        fflush(stdin);
+        scanf("%d", &opcio);
+        fflush(stdin);
+        while(opcio < 0 || opcio > 6)
+        {
+            printf("Ha introduit una opcio incorrecta, torni a introduir una opcio.\n");
+            scanf("%d", &opcio);
+        }
+        if(opcio == 1)
+        {  
+            return(1);        
+        }
+        else if(opcio == 2)
+        {
+            return(2);
+        }      
+        else if(opcio == 3)
+        {
+            return(3);              
+        }
+        else if(opcio == 4)
+        {              
+            return(4);     
+        }
+        else if (opcio == 5)
+        {
+            return(5);
+        }
+        else if (opcio == 6)
+        {
+            return(6);
+        }
+}
+// Menu USER ---------------------------------------------------------------------- Menu USER
+int menuUser(void)
+{
+
+    //Declaració variables menú
+        int opcio; // controla el menú
+    //inicialitzacio variables menú
+        opcio = -1;
+        printf("\t\tUsuari\n");
+        printf("1.- Continuar partida\n");
+        printf("2.- Partida nova\n");
+        printf("3.- Consultar preguntes\n");
+        printf("4.- Entrenament\n");
         printf("5.- EXIT.\n");
         fflush(stdin);
         scanf("%d", &opcio);
@@ -211,30 +312,29 @@ void menuAdmin(void)
             printf("Ha introduit una opcio incorrecta, torni a introduir una opcio.\n");
             scanf("%d", &opcio);
         }
-        if(opcio==1)
-        {
-              alta();  
-                     
+        if(opcio == 1)
+        {  
+            return(1);        
         }
-        else if(opcio==2)
+        else if(opcio == 2)
         {
-              
+            return(2);
         }      
-        else if(opcio==3)
+        else if(opcio == 3)
         {
-              
-              
+            return(3);              
         }
-        else if(opcio==4)
+        else if(opcio == 4)
+        {              
+            return(4);     
+        }
+        else if (opcio == 5)
         {
-              
-              
-        } 
-          
-    }   
-        
+            return(5);
+        }
+
 }
-// Login
+// Login -------------------------------------------------------------------------- Login
 int login(void)
 {
     char nik[25];
@@ -244,6 +344,7 @@ int login(void)
 
     printf("\n\t Login\n\n\n");
     printf("Nikname: ");
+    fflush(stdin);
     gets(nik);
     printf("\nContrasenya: ");
     do
@@ -255,6 +356,7 @@ int login(void)
         }        
         //printf("%d", caracter);
     } while (caracter != 13 );
+    printf("\n\n\n");
     if (nik == "admin" && contrasenya == "admin")
     {
         return(1);
@@ -263,11 +365,10 @@ int login(void)
     {
         return(0);
     }
-    printf("\nlogin complet!\n");
-    
+    printf("\nlogin complet!\n");    
      
 }
-// Registre
+// Registre ----------------------------------------------------------------------- Registre
 void registre(void)
 {
     // Creacio de variables
@@ -383,7 +484,7 @@ void sobre(void)
     printf(".\n");
 }
 
-// Alta preguntes
+// Alta preguntes ----------------------------------------------------------------- Alta Pregunte
 void alta(preguntes *inipreg)
 {
     preguntes *pregunta;
